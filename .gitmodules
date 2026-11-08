@@ -1,0 +1,4 @@
+[submodule "plugins/herdr-bar"]
+	path = plugins/herdr-bar
+	url = https://github.com/win0na/herdr-bar.git
+	branch = rootshell/current-first-exclude-panes
