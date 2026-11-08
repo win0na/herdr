@@ -324,6 +324,8 @@ The sidebar is the main Herdr dashboard. Search `ui.` in the [Config reference](
 
 Set `tab_bar_position = "bottom"` under `[ui]` to place the desktop tab row below the terminal panes. Prefix, Navigate, Copy, and Resize mode bars temporarily replace the bottom tab row while active. The default is `"top"`.
 
+Set `hide_tab_bar = true` under `[ui]` to remove the desktop tab row entirely. Tabs stay reachable through keybindings and the tab API. `hide_tab_bar_when_single_tab` is the narrower variant that hides the row only when the workspace has one tab.
+
 Configure an ordered tmux-style status area at the right edge of the tab row:
 
 ```toml

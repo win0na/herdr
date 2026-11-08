@@ -1006,6 +1006,12 @@
           "description": "Show agent labels in split pane borders when no manual pane label is set."
         },
         {
+          "key": "ui.hide_tab_bar",
+          "type": "boolean",
+          "default": "false",
+          "description": "Hide the tab row entirely."
+        },
+        {
           "key": "ui.hide_tab_bar_when_single_tab",
           "type": "boolean",
           "default": "false",

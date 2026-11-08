@@ -70,6 +70,18 @@ fn mobile_layout_reserves_only_client_header() {
 }
 
 #[test]
+fn hiding_the_tab_bar_reclaims_its_row() {
+    let mut config = ClientShellConfig::from_config(&Config::default());
+    config.hide_tab_bar = true;
+    let state = ClientShellState::new(config);
+    let layout = state.layout(106, 30);
+    assert!(layout.tab_bar.is_empty());
+    assert_eq!(layout.pane_surface.y, 0);
+    assert_eq!(layout.pane_surface.height, 30);
+    assert_eq!(state.surface_size(106, 30).rows, 30);
+}
+
+#[test]
 fn mobile_switcher_can_activate_an_online_saved_machine() {
     let mut state = ClientShellState::new(ClientShellConfig::from_config(&Config::default()));
     let profile = crate::client::endpoint::SavedSshEndpoint {
