@@ -491,6 +491,12 @@ impl App {
         let agent_manifest_summaries = Vec::new();
         let theme_runtime = theme_runtime_config(config, true);
         let (theme_palette, theme_name) = resolve_effective_theme(&theme_runtime, None);
+        let fallback_host_terminal_theme = config
+            .terminal
+            .palette_theme()
+            .ok()
+            .flatten()
+            .unwrap_or_default();
 
         let mut state = AppState {
             terminals: std::collections::HashMap::new(),
@@ -577,6 +583,8 @@ impl App {
             next_plugin_command_log_id: 1,
             plugin_commands_in_flight: 0,
             host_terminal_theme: crate::terminal_theme::TerminalTheme::default(),
+            client_host_terminal_theme: crate::terminal_theme::TerminalTheme::default(),
+            fallback_host_terminal_theme,
             host_cell_size: crate::kitty_graphics::HostCellSize::default(),
             session_dirty: false,
             terminal_runtime_shutdowns: Vec::new(),
@@ -687,6 +695,7 @@ impl App {
         };
         app.configure_tab_bar_status(&config.ui.tab_bar_right, &config.ui.tab_bar_right_separator);
         app.configure_window_title(&config.ui.window_title);
+        app.set_fallback_host_terminal_theme(fallback_host_terminal_theme);
         app.refresh_restored_workspace_git_metadata();
         Ok(app)
     }
@@ -750,6 +759,7 @@ impl App {
                 .get(idx)
                 .and_then(|ws| ws.focused_pane_id().map(|pane_id| (idx, pane_id)))
         });
+        app.apply_host_terminal_theme_to_panes();
         app.refresh_restored_workspace_git_metadata();
         Ok(app)
     }
@@ -1007,6 +1017,14 @@ impl App {
             self.state.default_shell = config.terminal.default_shell.clone();
             self.state.shell_mode = config.terminal.shell_mode;
             self.state.new_terminal_cwd = config.terminal.new_cwd.clone();
+            match config.terminal.palette_theme() {
+                Ok(theme) => {
+                    self.set_fallback_host_terminal_theme(theme.unwrap_or_default());
+                }
+                Err(err) => diagnostics.push(format!(
+                    "terminal.palette: {err}; keeping the current palette"
+                )),
+            }
         }
 
         if !invalid_section("worktrees") {

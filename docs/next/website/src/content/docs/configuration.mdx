@@ -93,6 +93,15 @@ new_cwd = "follow"
 
 `new_cwd = "follow"` keeps the default behavior and inherits the source pane or workspace. When there is no source workspace, Herdr starts in `$HOME`. Use `"home"` to always start in `$HOME`, `"current"` to use Herdr's process directory, or a fixed path such as `"~/Projects"`. Explicit `--cwd` values from the CLI or socket API still take precedence.
 
+Set the palette Herdr reports to pane programs when no attached client supplies one:
+
+```toml
+[terminal]
+palette = "~/.config/herdr/catppuccin-mocha.xresources"
+```
+
+The file may be Xresources (`*.color0: #45475a`, `*.foreground`, `*.background`) or Ghostty config syntax (`palette = 0=#45475a`). Indices 0-15 come from the file; 16-255 are generated with Ghostty's CIELAB palette generator, so a control-mode pane gets the same palette that rootshell or another terminal would display. Explicit `palette = N=#RRGGBB` entries are preserved. This matters when a pane starts before its control client attaches: without it, the server answers palette queries with Ghostty's built-in palette. A client that reports its own colours still takes precedence.
+
 ## Worktrees
 
 Set the root directory Herdr uses for Git worktree checkouts created from the sidebar:

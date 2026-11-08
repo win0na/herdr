@@ -893,6 +893,11 @@ pub struct AppState {
     pub(crate) plugin_commands_in_flight: usize,
     /// Resolved host terminal default colors for theming embedded panes.
     pub host_terminal_theme: TerminalTheme,
+    /// Theme from the most recent client, before the configured fallback is
+    /// merged in. Kept so config reloads can recompute the effective theme.
+    pub client_host_terminal_theme: TerminalTheme,
+    /// `terminal.palette` theme, used when a client does not report colours.
+    pub fallback_host_terminal_theme: TerminalTheme,
     /// Last known foreground host terminal cell size in pixels.
     pub(crate) host_cell_size: crate::kitty_graphics::HostCellSize,
     /// Set when a persisted session snapshot would change.
@@ -1133,6 +1138,8 @@ impl AppState {
             next_plugin_command_log_id: 1,
             plugin_commands_in_flight: 0,
             host_terminal_theme: TerminalTheme::default(),
+            client_host_terminal_theme: TerminalTheme::default(),
+            fallback_host_terminal_theme: TerminalTheme::default(),
             host_cell_size: crate::kitty_graphics::HostCellSize::default(),
             session_dirty: false,
             terminal_runtime_shutdowns: Vec::new(),

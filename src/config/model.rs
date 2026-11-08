@@ -260,6 +260,26 @@ pub struct TerminalConfig {
     pub new_cwd: NewTerminalCwdConfig,
     /// Render Kitty graphics in compatible outer terminals. Default: true.
     pub kitty_graphics: Option<bool>,
+    /// Xresources or Ghostty theme file used to answer pane palette queries
+    /// when no attached client supplies a host palette.
+    pub palette: Option<String>,
+}
+
+impl TerminalConfig {
+    pub(crate) fn palette_theme(
+        &self,
+    ) -> Result<Option<crate::terminal_theme::TerminalTheme>, String> {
+        self.palette
+            .as_deref()
+            .map(crate::config::load_terminal_theme)
+            .transpose()
+    }
+
+    pub(crate) fn palette_diagnostic(&self) -> Option<String> {
+        self.palette_theme()
+            .err()
+            .map(|err| format!("terminal.palette: {err}; using the client or default palette"))
+    }
 }
 
 #[derive(Debug, Deserialize)]

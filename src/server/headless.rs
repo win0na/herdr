@@ -857,7 +857,7 @@ impl HeadlessServer {
             host_terminal_appearance,
             host_terminal_appearance_explicit,
         );
-        self.app.set_host_terminal_theme(host_terminal_theme);
+        self.app.set_client_host_terminal_theme(host_terminal_theme);
     }
 
     fn sync_visible_server_config_diagnostic(&mut self, uses_local_keybindings: bool) {
@@ -2297,7 +2297,9 @@ impl HeadlessServer {
                     client.host_terminal_appearance,
                     client.host_terminal_appearance_explicit,
                 );
-                changed |= self.app.set_host_terminal_theme(client.host_terminal_theme);
+                changed |= self
+                    .app
+                    .set_client_host_terminal_theme(client.host_terminal_theme);
                 if changed {
                     self.resize_shared_runtime_to_effective_size_before_input();
                 }

@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+### Added
+- `terminal.palette` sets a pane palette from an Xresources or Ghostty theme file. The server uses it to answer terminal colour queries when no attached client reports a host palette, so palette-aware programs started before a control client attaches see the intended colours.
+
 ## [0.9.5] - 2026-10-14
 
 This is a hotfix release for v0.9.4. See the v0.9.4 notes for the full feature release: https://github.com/herdrdev/herdr/releases/tag/v0.9.4

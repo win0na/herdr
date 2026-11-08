@@ -446,6 +446,12 @@
           "type": "boolean",
           "default": "true",
           "description": "Render pane images in Kitty graphics-compatible outer terminals. Applications use the standard Kitty graphics protocol through pane terminal output; the external socket pane-overlay API is no longer available. Set false to disable graphics rendering. Restart the server or reattach the client after changing it. In remote sessions, server configuration controls Kitty graphics parsing while local client configuration controls outer-terminal output."
+        },
+        {
+          "key": "terminal.palette",
+          "type": "string",
+          "default": "unset",
+          "description": "Xresources or Ghostty theme file used to answer pane colour queries when no attached client reports a host palette. Indices 0-15 come from the file; 16-255 are generated with Ghostty's palette generator. A client that reports its own colours takes precedence."
         }
       ]
     },

@@ -120,6 +120,11 @@ const DEFAULT_CONFIG: &str = r##"# herdr configuration
 # Render pane images in Kitty graphics-compatible outer terminals.
 # kitty_graphics = true
 
+# Xresources or Ghostty theme file used to answer pane colour queries when
+# no attached client reports a host palette. 16-255 are generated with
+# Ghostty's palette generator.
+# palette = "~/.config/herdr/catppuccin-mocha.xresources"
+
 [update]
 # Update channel used by background version checks and `herdr update`.
 # Stable builds default to "stable". Windows preview builds default to "preview"

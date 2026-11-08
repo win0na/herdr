@@ -383,10 +383,52 @@ impl From<ffi::GhosttyColorRgb> for RgbColor {
     }
 }
 
+impl From<RgbColor> for ffi::GhosttyColorRgb {
+    fn from(value: RgbColor) -> Self {
+        Self {
+            r: value.r,
+            g: value.g,
+            b: value.b,
+        }
+    }
+}
+
 pub fn default_palette() -> [RgbColor; 256] {
     let mut palette = [ffi::GhosttyColorRgb::default(); 256];
     unsafe { ffi::ghostty_color_palette_default(palette.as_mut_ptr()) };
     palette.map(Into::into)
+}
+
+/// Generate the 216-colour cube and grayscale ramp from a base palette.
+///
+/// Indices 0-15 always come from `base`. Indices with a set bit in `skip`
+/// are preserved from `base`; every other 16-255 entry is interpolated in
+/// CIELAB between the base colours, matching Ghostty's own palette
+/// generation. `harmonious` keeps the background-to-foreground orientation
+/// for light themes.
+pub fn generate_palette(
+    base: &[RgbColor; 256],
+    skip: [u64; 4],
+    background: RgbColor,
+    foreground: RgbColor,
+    harmonious: bool,
+) -> [RgbColor; 256] {
+    let base: [ffi::GhosttyColorRgb; 256] = base.map(Into::into);
+    let background = ffi::GhosttyColorRgb::from(background);
+    let foreground = ffi::GhosttyColorRgb::from(foreground);
+    let mask = ffi::GhosttyColorPaletteMask { bits: skip };
+    let mut out = [ffi::GhosttyColorRgb::default(); 256];
+    unsafe {
+        ffi::ghostty_color_palette_generate(
+            base.as_ptr(),
+            &mask,
+            &background,
+            &foreground,
+            harmonious,
+            out.as_mut_ptr(),
+        );
+    }
+    out.map(Into::into)
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
